@@ -1,0 +1,2 @@
+#Download data from https://rues.data-bs.ch
+wget --mirror --convert-links --adjust-extension --page-requisites --no-parent --no-host-directories --reject html --exclude-directories=cgi-bin https://rues.data-bs.ch
