@@ -21,7 +21,7 @@
         <script>
             
             
-            Highcharts.chart('container', {
+            Highcharts.stockChart('container', {
                 data: {
                     csvURL: 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv',
                     enablePolling: true,
@@ -29,20 +29,12 @@
                     //dateFormat: 'DD.MM.YYYY HH:mm:ss',
                     parseDate: function(v, a, b){
                         //var date = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
-                        var date = moment(v, 'DD.MM.YYYY HH:mm:ss').utc();
+                        var date = moment(v, 'DD.MM.YYYY HH:mm:ss').utc().valueOf();
                         return date;
                     },
                     parsed: function(columns){
                         //remove second datetime column
                         columns.splice(1, 1);
-                        /*
-                        //convert datetime value
-                        columns[0].forEach(function(v, i, arr){
-                           //console.log(v); 
-                           arr[i] = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
-                        });
-                        //console.log(columns);
-                        */
                     },
                 },
                 xAxis: {
@@ -69,7 +61,7 @@
                     {yAxis: 1}
                     ], 
                 rangeSelector: {
-                    selected: 1
+                    selected: 5
                 },
                 navigator: {
                     enabled: false
