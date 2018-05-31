@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+        
+        <style>
+            #container {
+            	min-width: 310px;
+            	max-width: 1200px;
+            	height: 600px;
+            	margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        
+        <script>
+            
+            
+            Highcharts.chart('container', {
+                data: {
+                    csvURL: 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv',
+                    enablePolling: true,
+                    dataRefreshRate: 15*60,
+                    //dateFormat: 'DD.MM.YYYY HH:mm:ss',
+                    parseDate: function(v, a, b){
+                        //var date = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
+                        var date = moment(v, 'DD.MM.YYYY HH:mm:ss').utc();
+                        return date;
+                    },
+                    parsed: function(columns){
+                        //remove second datetime column
+                        columns.splice(1, 1);
+                        /*
+                        //convert datetime value
+                        columns[0].forEach(function(v, i, arr){
+                           //console.log(v); 
+                           arr[i] = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
+                        });
+                        //console.log(columns);
+                        */
+                    },
+                },
+                xAxis: {
+                    type: "datetime",
+                    labels: {
+                        rotation: -90
+                    }
+                },
+                yAxis: [
+                    {
+                        title: "yAxis 0", 
+                        opposite: false
+                        
+                    },
+                    {   
+                        title: "yAxis 1",
+                        opposite: true
+                    }
+                    ],
+                series: [
+                    {yAxis: 0},
+                    {yAxis: 1},
+                    {yAxis: 1},
+                    {yAxis: 1}
+                    ], 
+                rangeSelector: {
+                    selected: 1
+                },
+                navigator: {
+                    enabled: false
+                }
+            });            
+        </script>
+    </body>
+</html>
