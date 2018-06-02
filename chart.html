@@ -45,19 +45,22 @@
                     //dateFormat: 'DD.MM.YYYY HH:mm:ss',
                     parseDate: function(v, a, b){
                         //var date = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
-                        var date = moment(v, 'DD.MM.YYYY HH:mm:ss').utc().valueOf();
+                        var date = moment.utc(v, 'DD.MM.YYYY HH:mm:ss').utc().valueOf();
                         return date;
                     },
                     parsed: function(columns){
                         //remove second datetime column
                         columns.splice(1, 1);
+                        /*
                         //find wrong ordering
                         for (var i=1; i<columns[0].length-1; i++){
                             //console.log(columns[i+1]);
                             if (columns[0][i+1] - columns[0][i] < 0){
                                 console.log('wrong sort in line ', i-1, columns[0][i], columns[0][i+1] );
+                                console.log(moment(columns[0][i]).format('DD.MM.YYYY, h:mm:ss'));
                             }
                         }
+                        */
                         //rename series
                         columns[1][0] = 'Elektrische Leitfähigkeit';
                         columns[2][0] = 'Sauerstoffgehalt';
@@ -89,7 +92,8 @@
                         },
                         height: '25%',
                         //opposite: false,
-                        offset: 0
+                        offset: 0, 
+                        showInNavigator: true
                     },
                     {   
                         title: {
