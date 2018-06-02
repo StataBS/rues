@@ -3,6 +3,10 @@
         <meta charset="UTF-8">
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        <!--
+        <script src="https://code.highcharts.com/modules/boost-canvas.js"></script>    
+        <script src="https://code.highcharts.com/modules/boost.js"></script>    
+        -->
         <script src="https://code.highcharts.com/stock/modules/data.js"></script>
         <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
@@ -36,7 +40,7 @@
             Highcharts.stockChart('container', {
                 data: {
                     csvURL: 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv',
-                    enablePolling: true,
+                    enablePolling: false,
                     dataRefreshRate: 15*60,
                     //dateFormat: 'DD.MM.YYYY HH:mm:ss',
                     parseDate: function(v, a, b){
@@ -47,12 +51,26 @@
                     parsed: function(columns){
                         //remove second datetime column
                         columns.splice(1, 1);
-                        console.log(columns);
-                        //console.log(columns[1][0]);
+                        //find wrong ordering
+                        for (var i=1; i<columns[0].length-1; i++){
+                            //console.log(columns[i+1]);
+                            if (columns[0][i+1] - columns[0][i] < 0){
+                                console.log('wrong sort in line ', i-1, columns[0][i], columns[0][i+1] );
+                            }
+                        }
+                        //rename series
                         columns[1][0] = 'Elektrische Leitfähigkeit';
                         columns[2][0] = 'Sauerstoffgehalt';
                         columns[3][0] = 'pH';
                         columns[4][0] = 'Temperatur';
+                    },
+                    complete: function(obj){
+                        //sort
+                        /*
+                        obj.series[0].data.sort(function(a, b){
+                            return a-b;
+                        })
+                        */
                     },
                     seriesMapping: [
                         {x: 0, y: 1},
@@ -70,7 +88,7 @@
                             text: 'Temperatur', 
                         },
                         height: '25%',
-                        opposite: false,
+                        //opposite: false,
                         offset: 0
                     },
                     {   
@@ -79,7 +97,7 @@
                         },
                         height: '25%',
                         top: '25%',
-                        opposite: false,
+                        //opposite: false,
                         offset: 0
                     },
                     {
@@ -88,7 +106,7 @@
                         },
                         height: '25%',
                         top: '50%', 
-                        opposite: false,
+                        //opposite: false,
                         offset: 0
                     },
                     {   
@@ -97,14 +115,20 @@
                         },
                         height: '25%',
                         top: '75%',
-                        opposite: false,
+                        //opposite: false,
                         offset: 0
                     }
                     ],
                 series: [
-                    {yAxis: 3},
-                    {yAxis: 2},
-                    {yAxis: 1},
+                    {
+                        yAxis: 3, 
+                    },
+                    {
+                        yAxis: 2, 
+                    },
+                    {
+                        yAxis: 1,
+                    },
                     {
                         yAxis: 0,
                     }
@@ -112,9 +136,16 @@
                 rangeSelector: {
                     selected: 5
                 },
+                plotOptions: {
+                    line: {
+                        tooltip: {
+                            valueDecimals: 2
+                        }
+                    }
+                },
                 navigator: {
                     enabled: false
-                }
+                }, 
             });            
         </script>
     </body>
