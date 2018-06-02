@@ -31,18 +31,11 @@
                 global $
             */
             
-            /*
-            var csvurl = 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv';
-            $.get(csvurl, function(data){
-                console.log(data)
-            });
-            */
             Highcharts.stockChart('container', {
                 data: {
                     csvURL: 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv',
                     enablePolling: false,
                     dataRefreshRate: 15*60,
-                    //dateFormat: 'DD.MM.YYYY HH:mm:ss',
                     parseDate: function(v, a, b){
                         //var date = moment(v, 'DD.MM.YYYY HH:mm:ss').toDate();
                         var date = moment.utc(v, 'DD.MM.YYYY HH:mm:ss').utc().valueOf();
@@ -51,29 +44,11 @@
                     parsed: function(columns){
                         //remove second datetime column
                         columns.splice(1, 1);
-                        /*
-                        //find wrong ordering
-                        for (var i=1; i<columns[0].length-1; i++){
-                            //console.log(columns[i+1]);
-                            if (columns[0][i+1] - columns[0][i] < 0){
-                                console.log('wrong sort in line ', i-1, columns[0][i], columns[0][i+1] );
-                                console.log(moment(columns[0][i]).format('DD.MM.YYYY, h:mm:ss'));
-                            }
-                        }
-                        */
                         //rename series
                         columns[1][0] = 'Elektrische Leitfähigkeit';
                         columns[2][0] = 'Sauerstoffgehalt';
                         columns[3][0] = 'pH';
                         columns[4][0] = 'Temperatur';
-                    },
-                    complete: function(obj){
-                        //sort
-                        /*
-                        obj.series[0].data.sort(function(a, b){
-                            return a-b;
-                        })
-                        */
                     },
                     seriesMapping: [
                         {x: 0, y: 1},
