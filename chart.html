@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="UTF-8">
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://code.highcharts.com/stock/highstock.js"></script>
         <script src="https://code.highcharts.com/stock/modules/data.js"></script>
@@ -20,7 +21,18 @@
         
         <script>
             
+            /*
+                global Highcharts
+                global moment
+                global $
+            */
             
+            /*
+            var csvurl = 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv';
+            $.get(csvurl, function(data){
+                console.log(data)
+            });
+            */
             Highcharts.stockChart('container', {
                 data: {
                     csvURL: 'https://rues-test-jonasbieri.c9users.io/onlinedaten/roh/2018_bis_aktuell.csv',
@@ -35,30 +47,67 @@
                     parsed: function(columns){
                         //remove second datetime column
                         columns.splice(1, 1);
+                        console.log(columns);
+                        //console.log(columns[1][0]);
+                        columns[1][0] = 'Elektrische Leitfähigkeit';
+                        columns[2][0] = 'Sauerstoffgehalt';
+                        columns[3][0] = 'pH';
+                        columns[4][0] = 'Temperatur';
                     },
+                    seriesMapping: [
+                        {x: 0, y: 1},
+                        {x: 0, y: 2},
+                        {x: 0, y: 3},
+                        {x: 0, y: 4},
+                    ]
                 },
                 xAxis: {
                     type: "datetime",
-                    labels: {
-                        rotation: -90
-                    }
                 },
                 yAxis: [
                     {
-                        title: "yAxis 0", 
-                        opposite: false
-                        
+                        title: {
+                            text: 'Temperatur', 
+                        },
+                        height: '25%',
+                        opposite: false,
+                        offset: 0
                     },
                     {   
-                        title: "yAxis 1",
-                        opposite: true
+                        title: {
+                            text: "pH", 
+                        },
+                        height: '25%',
+                        top: '25%',
+                        opposite: false,
+                        offset: 0
+                    },
+                    {
+                        title: {
+                            text: "Sauerstoffgehalt", 
+                        },
+                        height: '25%',
+                        top: '50%', 
+                        opposite: false,
+                        offset: 0
+                    },
+                    {   
+                        title: {
+                            text: "Elektrische Leitfähigkeit", 
+                        },
+                        height: '25%',
+                        top: '75%',
+                        opposite: false,
+                        offset: 0
                     }
                     ],
                 series: [
-                    {yAxis: 0},
+                    {yAxis: 3},
+                    {yAxis: 2},
                     {yAxis: 1},
-                    {yAxis: 1},
-                    {yAxis: 1}
+                    {
+                        yAxis: 0,
+                    }
                     ], 
                 rangeSelector: {
                     selected: 5
