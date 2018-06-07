@@ -86,10 +86,10 @@
 				//console.log(url);
 				$.getJSON(url, function (data) {
 					splitData(data);
-					chart.series[0].setData(temperatureData, false);
-					chart.series[1].setData(phData, false);
-					chart.series[2].setData(o2Data, false);
-					chart.series[3].setData(lfData, false);
+					chart.series[3].setData(temperatureData, false);
+					chart.series[2].setData(phData, false);
+					chart.series[1].setData(o2Data, false);
+					chart.series[0].setData(lfData, false);
 					chart.redraw();
 					chart.hideLoading();
 				});
@@ -195,22 +195,23 @@
 						{
 							name: 'Elektrische Leitfähigkeit',
 							yAxis: 3, 
-							data: temperatureData
+							data: lfData
+							
 						},
 						{
 							name: 'Sauerstoffgehalt',
 							yAxis: 2, 
-							data: phData
+							data: o2Data
 						},
 						{
 							name: 'pH',
 							yAxis: 1,
-							data: o2Data
+							data: phData
 						},
 						{
 							name: 'Temperatur',
 							yAxis: 0,
-							data: lfData
+							data: temperatureData
 						}
 						], 
 	
