@@ -4,3 +4,6 @@ tail -q -n +2 /home/opendata/public_html/rues/onlinedaten/roh/*_RUES_Online_S3.c
 
 #Copy corrected data and append raw data to it
 cp /home/opendata/public_html/rues/onlinedaten/korrigiert/online2002_2017.csv /home/opendata/public_html/rues/onlinedaten/online2002_aktuell.csv &&  tail -q -n +2 /home/opendata/public_html/rues/onlinedaten/roh/2018_bis_aktuell.csv >> /home/opendata/public_html/rues/onlinedaten/online2002_aktuell.csv 
+
+#import csv to database move csv files, update aggregated tables
+curl https://rues.data-bs.ch/onlinedaten/raw2db.php > /dev/null 2>&1
