@@ -1,0 +1,289 @@
+<html>
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+		<script src="https://code.highcharts.com/stock/highstock.js"></script>
+		<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+        <!--
+        <script src="https://code.highcharts.com/modules/boost-canvas.js"></script>    
+        <script src="https://code.highcharts.com/modules/boost.js"></script>    
+        -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+
+        <style>
+            #container {
+            	min-width: 310px;
+            	max-width: 1200px;
+            	height: 600px;
+            	margin: 0 auto;
+            }
+
+        </style>
+    </head>
+    
+    <body>
+        <div id="container" class="animate-bottom"></div>
+        <!--div class="se-pre-con"></div-->
+        
+        
+        <script>
+            
+            /*
+                global Highcharts
+                global moment
+                global $
+            */
+
+			/**
+			 * Load new data depending on the selected min and max
+			 */
+			 
+			var baseUrl = 'https://rues.data-bs.ch/onlinedaten/from-sql.php';
+			
+			var temperatureData;
+			var phData;
+			var o2Data;
+			var lfData;
+
+			
+			function splitData(data){
+				temperatureData = [];
+				phData = [];
+				o2Data = [];
+				lfData = [];
+
+			    for (var i = 0; i < data.length; i++) {
+			        temperatureData.push([
+			            data[i][0], 
+			            data[i][4]
+			        ]);
+			
+			        phData.push([
+			            data[i][0],
+			            data[i][3] 
+			        ]);
+			        
+			        o2Data.push([
+			            data[i][0],
+			            data[i][2] 
+			        ]);
+
+			        lfData.push([
+			            data[i][0],
+			            data[i][1]
+			        ]);
+			    }
+			}
+
+			
+			function afterSetExtremes(e) {
+
+				var chart = Highcharts.charts[0];
+
+				chart.showLoading();
+				var url = baseUrl +'?start=' + Math.round(e.min) +'&end=' + Math.round(e.max) + '&callback=?';
+				//console.log(url);
+				$.getJSON(url, function (data) {
+					splitData(data);
+					chart.series[0].setData(temperatureData, false);
+					chart.series[1].setData(phData, false);
+					chart.series[2].setData(o2Data, false);
+					chart.series[3].setData(lfData, false);
+					chart.redraw();
+					chart.hideLoading();
+				});
+			}
+			
+			//var now = Date.now();
+			//var url = baseUrl + '?start=' + (now - 5 * 365 * 24 * 3600 * 1000 ) + '&end=' + now + '&callback=?';
+			var url = baseUrl + '?callback=?';
+			// See source code from the JSONP handler at https://github.com/highcharts/highcharts/blob/master/samples/data/from-sql.php
+			$.getJSON(url, function (data) {
+			
+				// Add a null value for the end date
+				//data = [].concat(data, [[Date.UTC(2018, 9, 14, 19, 59), null, null, null, null]]);
+			
+				splitData(data)	;
+	
+				Highcharts.setOptions({
+					lang: {
+							decimalPoint: ',',
+							thousandsSep: '.',
+							loading: 'Daten werden geladen...',
+							months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+							weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+							shortMonths: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+							exportButtonTitle: "Exportieren",
+							printButtonTitle: "Drucken",
+							rangeSelectorFrom: "Von",
+							rangeSelectorTo: "Bis",
+							rangeSelectorZoom: "Zeitraum",
+							downloadPNG: 'Download als PNG-Bild',
+							downloadJPEG: 'Download als JPEG-Bild',
+							downloadPDF: 'Download als PDF-Dokument',
+							downloadSVG: 'Download als SVG-Bild',
+							resetZoom: "Zoom zurücksetzen",
+							resetZoomTitle: "Zoom zurücksetzen"             
+						}        
+				});
+
+				
+				Highcharts.stockChart('container', {
+					title: {
+						text: 'Online-Daten Rheinüberwachungsstation Weil am Rhein',
+						align: 'left',
+					},
+					subtitle: {
+						text: '1.1.2002 bis 31.12.2017 plausibilisierte Daten stündlich, danach Rohdaten viertelstündlich',
+						align: 'left',
+					},
+
+					xAxis: {
+						type: "datetime",
+						events: {
+							afterSetExtremes: afterSetExtremes
+						}
+					},
+					yAxis: [
+						{
+							title: {
+								text: 'Temperatur', 
+							},
+							height: '25%',
+							//opposite: false,
+							offset: 0, 
+							showInNavigator: true
+						},
+						{   
+							title: {
+								text: "pH", 
+							},
+							height: '25%',
+							top: '25%',
+							//opposite: false,
+							offset: 0
+						},
+						{
+							title: {
+								text: "Sauerstoffgehalt", 
+							},
+							height: '25%',
+							top: '50%', 
+							//opposite: false,
+							offset: 0
+						},
+						{   
+							title: {
+								text: "Elektrische Leitfähigkeit", 
+							},
+							height: '25%',
+							top: '75%',
+							//opposite: false,
+							offset: 0
+						}
+						],
+						/*
+						series: [{
+							data: data,
+							dataGrouping: {
+								enabled: false
+							}
+						}],
+						*/
+	                series: [
+						{
+							name: 'Elektrische Leitfähigkeit',
+							yAxis: 3, 
+							data: temperatureData
+						},
+						{
+							name: 'Sauerstoffgehalt',
+							yAxis: 2, 
+							data: phData
+						},
+						{
+							name: 'pH',
+							yAxis: 1,
+							data: o2Data
+						},
+						{
+							name: 'Temperatur',
+							yAxis: 0,
+							data: lfData
+						}
+						], 
+	
+					rangeSelector: {
+						allButtonsEnabled: true,
+						selected: 8, 
+						inputDateFormat: '%d.%m.%Y',
+							buttons: [{
+							    type: 'day',
+							    count: 1,
+							    text: '1 T'
+							},{
+							    type: 'week',
+							    count: 1,
+							    text: '1 W'
+							}, {
+							    type: 'month',
+							    count: 1,
+							    text: '1 M'
+							}, {
+							    type: 'month',
+							    count: 6,
+							    text: '6 M'
+							}, {
+							    type: 'ytd',
+							    text: 'YTD'
+							}, {
+							    type: 'year',
+							    count: 1,
+							    text: '1 J'
+							}, {
+							    type: 'year',
+							    count: 3,
+							    text: '3 J'
+							}, {
+							    type: 'all',
+							    text: 'Alle J'
+							}]						
+					},
+					plotOptions: {
+						line: {
+							tooltip: {
+								valueDecimals: 2
+							}
+						}
+					},
+					chart: {
+						//zoomType: 'x', 
+						/*
+						panning: true, 
+						panKey: 'shift',
+						resetZoomEnabled: true,
+						resetZoomButton: {
+							position: {
+								align: 'middle',
+								verticalAlign: 'top'
+							}
+						},
+						*/
+					},
+					loading: {
+						labelStyle: {
+				            fontFamily: 'Arial'
+				        }					
+					},
+					navigator: {
+						adaptToUpdatedData: false,
+						enabled: true,
+						baseSeries: 3
+					}, 
+				});            
+			});
+
+        </script>
+    </body>
+</html>
