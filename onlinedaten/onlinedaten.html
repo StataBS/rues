@@ -133,10 +133,20 @@
 					title: {
 						text: 'Online-Daten Rheinüberwachungsstation Weil am Rhein',
 						align: 'left',
+						style: {
+							fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+							fontSize: "14px",
+							fontWeight: 'bold',
+							color: 'black'
+						}
 					},
 					subtitle: {
 						text: '1.1.2002 bis 31.12.2017 plausibilisierte Daten stündlich, danach Rohdaten viertelstündlich',
 						align: 'left',
+						style: {
+							fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+							color: 'black'
+						}
 					},
 
 					xAxis: {
@@ -219,29 +229,33 @@
 						allButtonsEnabled: true,
 						selected: 6, 
 						inputDateFormat: '%d.%m.%Y',
-							buttons: [{
-							    type: 'day',
-							    count: 1,
-							    text: '1 T'
-							},{
-							    type: 'month',
-							    count: 1,
-							    text: '1 M'
-							}, {
-							    type: 'month',
-							    count: 6,
-							    text: '6 M'
-							}, {
-							    type: 'ytd',
-							    text: 'YTD'
-							}, {
-							    type: 'year',
-							    count: 1,
-							    text: '1 J'
-							}, {
-							    type: 'all',
-							    text: 'Alle J'
-							}]						
+						labelStyle: {
+							fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+							color: 'black'
+						},						
+						buttons: [{
+						    type: 'day',
+						    count: 1,
+						    text: '1 T'
+						},{
+						    type: 'month',
+						    count: 1,
+						    text: '1 M'
+						}, {
+						    type: 'month',
+						    count: 6,
+						    text: '6 M'
+						}, {
+						    type: 'ytd',
+						    text: 'YTD'
+						}, {
+						    type: 'year',
+						    count: 1,
+						    text: '1 J'
+						}, {
+						    type: 'all',
+						    text: 'Alle J'
+						}]
 					},
 					plotOptions: {
 						line: {
