@@ -105,9 +105,9 @@
 			// See source code from the JSONP handler at https://github.com/highcharts/highcharts/blob/master/samples/data/from-sql.php
 			$.getJSON(url, function (data) {
 			
-				// Add a null value for the end date
-				//data = [].concat(data, [[Date.UTC(2018, 9, 14, 19, 59), null, null, null, null]]);
-			
+				// Add a null value for the end date so that the latest timestamp is available to Highcharts
+				data = [].concat(data, [[new Date().getTime(), null, null, null, null]]);
+				
 				splitData(data)	;
 	
 				Highcharts.setOptions({
@@ -242,6 +242,10 @@
 						    count: 1,
 						    text: '1 T'
 						},{
+						    type: 'week',
+						    count: 1,
+						    text: '1 W'
+						},{
 						    type: 'month',
 						    count: 1,
 						    text: '1 M'
@@ -302,6 +306,10 @@
 				            $('input.highcharts-range-selector', $(chart.container).parent())
 				                .datepicker();
 				        }, 0);
+				        
+				        // click the desired rangeSelector
+				        $('.highcharts-range-selector-buttons .highcharts-button').first().next().click();
+				        $('#container').show();
 			    });            
 			});
 
